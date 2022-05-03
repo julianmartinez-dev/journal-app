@@ -1,0 +1,73 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0px;
+}
+
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+main {
+  width: 100%;
+}
+
+.mt-1{
+    margin-top: 5px;
+}
+
+.mt-5{
+    margin-top: 20px;
+}
+
+.mb-1{
+    margin-bottom: 5px;
+}
+.mb-5{
+    margin-bottom: 20px;
+}
+.ml-1{
+    margin-left: 5px;
+}
+.ml-5{
+    margin-left: 20px;
+}
+.mr-1{
+    margin-right: 5px;
+}
+.mr-5{
+    margin-right: 20px;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.bg-red{
+  background-color: red;
+}
+
+.text-center{
+    text-align: center;
+}
+.mx-auto{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.link{
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+    color: $dark-grey;
+
+    &:hover{
+        color: darken($color: $dark-grey, $amount: 15);
+    }
+}
+
+textarea{
+    resize: none;
+}
