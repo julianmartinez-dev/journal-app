@@ -1,12 +1,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'animate.css';
+import useForm from '../../hooks/useForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError, setError } from '../../actions/ui';
+import { login, startLoginEmailPassword, startGoogleLogin } from '../../actions/auth';
 
 const LoginScreen = () => {
+
+  const dispatch = useDispatch()
+  const { msgError, loading } = useSelector((state) => state.ui);
+
+  const [formValues, handleInputChange] = useForm({
+    email: '',
+    password: ''
+  })
+
+  const { email, password } = formValues;
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if( [email, password ].includes('')) {
+      dispatch(setError('Todos los campos son requeridos'))
+      return;
+    }
+    dispatch(clearError())
+    dispatch(startLoginEmailPassword(email,password))
+  }
+
+  const handleGoogleLogin = (e) => {
+    dispatch( startGoogleLogin() )
+  }
+
   return (
     <div className=" animate__animated animate__fadeIn">
-      <h3 className="mb-5 text-center">Login</h3>
-      <form>
+      <h3 className="mb-5 text-center">Iniciar Sesión</h3>
+      <form onSubmit={handleLogin}>
         <div className="auth__form">
           <label htmlFor="email" className="mr-1 auth__form-label mb-1">
             Email
@@ -14,9 +43,12 @@ const LoginScreen = () => {
           <input
             type="email"
             id="email"
+            name="email"
             placeholder="email@email.com"
             className="auth__form-input"
             autoComplete="off"
+            value={email}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -27,21 +59,23 @@ const LoginScreen = () => {
           <input
             type="password"
             id="password"
+            name="password"
             placeholder="Tu password"
             className="auth__form-input"
+            value={password}
+            onChange={handleInputChange}
           />
         </div>
 
-        <button type="submit" className="auth__button">
-          Login
+        {msgError && <p className="msg-error">{msgError}</p>}
+
+        <button type="submit" className="auth__button" disabled={loading}>
+          Ingresar
         </button>
 
-        <hr />
         <div className="mt-5 mb-5">
-          <p className="text-center auth__form-label">
-            Login with social networks
-          </p>
-          <div className="google-btn mt-5">
+          
+          <div className="google-btn mt-5" onClick={handleGoogleLogin}>
             <div className="google-icon-wrapper">
               <img
                 className="google-icon"
@@ -56,7 +90,7 @@ const LoginScreen = () => {
         </div>
 
         <Link to="/auth/register" className="link">
-          Register
+          Registrarse
         </Link>
       </form>
     </div>

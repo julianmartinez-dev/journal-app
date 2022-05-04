@@ -14,6 +14,8 @@
         background-color: $white;
         color: $dark-grey;
     }
+
+    
     
 }
 
@@ -22,7 +24,7 @@
     margin-top: 5px;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
+    width: 75%;
     height: 42px;
     background-color: $google-blue;
     border-radius: 2px;
@@ -58,5 +60,11 @@
     }
     &:active {
         background: $button-active-blue;
+    }
+}
+
+@media (min-width: 768px) {
+    .google-btn {
+        width: 50%;
     }
 }
