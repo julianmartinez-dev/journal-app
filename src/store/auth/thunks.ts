@@ -1,6 +1,6 @@
 import { Action, Dispatch } from "@reduxjs/toolkit"
 import { checkingCredentials, login, logout } from "./authSlice"
-import { signInWithGoogle } from '../../firebase';
+import { loginWithEmailPassword, registerWithEmailPassword, signInWithGoogle } from '../../firebase';
 
 export const checkingAuthentication = (email: string, password: string) => {
     return async (dispatch: Dispatch<Action>) => {
@@ -8,7 +8,7 @@ export const checkingAuthentication = (email: string, password: string) => {
     }
 }
 
-export const startGoogleSignIn = (email?: string, password?: string) => {
+export const startGoogleSignIn = () => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch(checkingCredentials());
 
@@ -17,3 +17,25 @@ export const startGoogleSignIn = (email?: string, password?: string) => {
     dispatch( login( result ))
   };
 };
+
+export const startCreatingUserWithEmailPassword  = (email: string, name: string, password: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch(checkingCredentials());
+
+    const resp = await registerWithEmailPassword({email, name, password})
+    if(!resp?.ok) return dispatch(logout({ errorMessage: resp?.errorMessage }));
+    
+    dispatch( login( resp ))
+  }
+}
+
+export const startSignInWithEmailPassword = (email: string, password: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch(checkingCredentials());
+
+    const resp = await loginWithEmailPassword(email, password);
+    if(!resp?.ok) return dispatch(logout({ errorMessage: resp?.errorMessage }));
+    
+    dispatch( login( resp ))
+  }
+}

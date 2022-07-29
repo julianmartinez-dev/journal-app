@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { FormEvent, useMemo } from 'react';
 import { Google } from '@mui/icons-material';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
-import { checkingAuthentication, startGoogleSignIn } from '../../store/auth';
+import { startGoogleSignIn, startSignInWithEmailPassword } from '../../store/auth';
 import { AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -16,7 +16,7 @@ interface Inputs {
 
 export const LoginPage = () => {
 
-  const { status } = useSelector((state: RootState) => state.auth);
+  const { status, errorMessage } = useSelector((state: RootState) => state.auth);
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
   const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ export const LoginPage = () => {
   };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const { email, password} = data;
-    dispatch(checkingAuthentication(email, password) as unknown as AnyAction);
+    dispatch(startSignInWithEmailPassword(email, password) as unknown as AnyAction);
   }
 
   return (
@@ -70,6 +70,11 @@ export const LoginPage = () => {
             />
           </Grid>
 
+          {errorMessage && (
+            <Grid item xs={12}>
+             <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
+          )}
           <Grid
             container
             direction="row"

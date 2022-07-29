@@ -1,21 +1,39 @@
 import { Google } from "@mui/icons-material";
-import { Grid, TextField, Button, Typography, Link } from "@mui/material";
+import { Grid, TextField, Button, Typography, Link, Alert } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout"
 // import { useForm } from '../../hooks/useForm';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useDispatch, useSelector } from "react-redux";
+import { startCreatingUserWithEmailPassword } from '../../store/auth/thunks';
+import { RootState } from "../../store";
+import { AnyAction } from "@reduxjs/toolkit";
+import { useMemo } from "react";
 
 interface IFormInput {
-  name: String;
-  password: String;
-  email: String;
+  name: string;
+  password: string;
+  email: string;
 }
 
 export const RegisterPage = () => {
 
+  const { status, errorMessage } = useSelector((state: RootState) => state.auth);
+
+  const isCheckingAuthentication = useMemo( () => {
+    return status === 'checking';
+  },[status])
+
+  const dispatch = useDispatch();
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = ({name, password, email}) => {
+    dispatch(
+      startCreatingUserWithEmailPassword(
+        email,
+        name,
+        password
+      ) as unknown as AnyAction
+    );
   }
  
 
@@ -29,15 +47,13 @@ export const RegisterPage = () => {
               type="text"
               placeholder="John Doe"
               fullWidth
-              {
-                ...register("name",{
-                  required: 'El nombre es obligatorio',
-                  minLength: {
-                    value: 3,
-                    message: 'El nombre debe tener al menos 3 caracteres'
-                  }
-                })
-              }
+              {...register('name', {
+                required: 'El nombre es obligatorio',
+                minLength: {
+                  value: 3,
+                  message: 'El nombre debe tener al menos 3 caracteres',
+                },
+              })}
               error={!!errors.name}
               helperText={errors.name?.message}
             />
@@ -48,15 +64,13 @@ export const RegisterPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
-              {
-                ...register('email', {
-                  required: 'El correo es obligatorio',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                    message: 'El correo no es valido'
-                  }
-                })
-              }
+              {...register('email', {
+                required: 'El correo es obligatorio',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'El correo no es valido',
+                },
+              })}
               error={!!errors.email}
               helperText={errors.email?.message}
             />
@@ -67,27 +81,32 @@ export const RegisterPage = () => {
               type="password"
               placeholder="contraseña"
               fullWidth
-              {
-                ...register('password',{
-                  required: 'La contraseña es obligatoria',
-                  minLength: {
-                    value: 6,
-                    message: 'La contraseña debe tener al menos 6 caracteres'
-                  }
-                })
-              }
+              {...register('password', {
+                required: 'La contraseña es obligatoria',
+                minLength: {
+                  value: 6,
+                  message: 'La contraseña debe tener al menos 6 caracteres',
+                },
+              })}
               error={!!errors.password}
               helperText={errors.password?.message}
             />
           </Grid>
 
           <Grid container direction="row" justifyContent="center" marginTop={2}>
+            {errorMessage && (
+              <Grid item xs={12} paddingLeft={'16px'} paddingBottom={'16px'}>
+                <Alert severity="error">{errorMessage}</Alert>
+              </Grid>
+            )}
+
             <Grid item xs={12} paddingLeft={'16px'}>
               <Button
                 variant="contained"
                 color="primary"
                 fullWidth
                 type="submit"
+                disabled={isCheckingAuthentication}
               >
                 Crear Cuenta
               </Button>

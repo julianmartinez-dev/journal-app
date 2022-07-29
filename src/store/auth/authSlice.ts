@@ -11,6 +11,7 @@ interface authState {
   displayName?: string | null;
   photoURL?: string | null;
   errorMessage?: string | null;
+  name: string | null;
 }
 
 // Define the initial state using that type
@@ -21,6 +22,7 @@ const initialState: authState = {
   displayName: null,
   photoURL: null,
   errorMessage: null,
+  name: null
 }
 
 export const authSlice = createSlice({
@@ -28,12 +30,14 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
      login: (state, action) => {
-      const { uid, email, displayName, photoURL } = action.payload;
+      const { uid, email, displayName, photoURL, name } = action.payload;
       state.status = 'authenticated';
       state.uid = uid;
       state.email = email;
       state.displayName = displayName;
       state.photoURL = photoURL;
+      state.name = name;
+      state.errorMessage = null;
      },
 
      logout: (state, action) => {
@@ -47,6 +51,7 @@ export const authSlice = createSlice({
 
      checkingCredentials: (state) => {
         state.status = 'checking'
+        state.errorMessage = null;
      },
   },
 })
