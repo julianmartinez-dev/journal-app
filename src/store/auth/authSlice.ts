@@ -6,25 +6,48 @@ type IStatus = 'checking' | 'not-authenticated' | 'authenticated'
 
 interface authState {
   status: IStatus;
-  uid?: string;
-  email?: string;
-  displayName?: string;
-  photoURL?: string;
-  errorMessage?: string;
+  uid?: string | null;
+  email?: string | null;
+  displayName?: string | null;
+  photoURL?: string | null;
+  errorMessage?: string | null;
 }
 
 // Define the initial state using that type
 const initialState: authState = {
   status: 'not-authenticated',
+  uid: null,
+  email: null,
+  displayName: null,
+  photoURL: null,
+  errorMessage: null,
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-     login: (state, action) => {},
-     logout: (state, action) => {},
-     checkingCredentials: (state, action) => {},
+     login: (state, action) => {
+      const { uid, email, displayName, photoURL } = action.payload;
+      state.status = 'authenticated';
+      state.uid = uid;
+      state.email = email;
+      state.displayName = displayName;
+      state.photoURL = photoURL;
+     },
+
+     logout: (state, action) => {
+        state.status = 'not-authenticated';
+        state.uid = null;
+        state.email = null;
+        state.displayName = null;
+        state.photoURL = null;
+        state.errorMessage = action.payload.errorMessage;
+     },
+
+     checkingCredentials: (state) => {
+        state.status = 'checking'
+     },
   },
 })
 
