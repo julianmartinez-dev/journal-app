@@ -8,7 +8,7 @@ export const checkingAuthentication = (email: string, password: string) => {
     }
 }
 
-export const startGoogleSignIn = (email: string, password: string) => {
+export const startGoogleSignIn = (email?: string, password?: string) => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch(checkingCredentials());
 

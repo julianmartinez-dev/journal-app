@@ -4,38 +4,36 @@ import { FormEvent, useMemo } from 'react';
 import { Google } from '@mui/icons-material';
 import { Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
-import { useForm } from '../../hooks';
 import { checkingAuthentication, startGoogleSignIn } from '../../store/auth';
 import { AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+interface Inputs {
+  email: string;
+  password: string;
+}
 
 export const LoginPage = () => {
 
   const { status } = useSelector((state: RootState) => state.auth);
-
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
   const dispatch = useDispatch();
-
-  const { email, password, onInputChange } = useForm({
-    email: 'julian.fmartinez@gmail.com',
-    password: '123456',
-  })
 
   // if status never changes, it will not re-render
   const isAuthenticated = useMemo(() => status === 'checking', [status]);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    dispatch(checkingAuthentication(email!, password!) as unknown as AnyAction);
-  };
-
   const onGoogleSignIn = () => {
-    dispatch(startGoogleSignIn(email!, password!) as unknown as AnyAction);
+    dispatch(startGoogleSignIn() as unknown as AnyAction);
+  };
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const { email, password} = data;
+    dispatch(checkingAuthentication(email, password) as unknown as AnyAction);
   }
 
   return (
     <AuthLayout title="Iniciar sesión">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -43,9 +41,15 @@ export const LoginPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
-              name="email"
-              value={email}
-              onChange={onInputChange}
+              {...register('email', {
+                required: 'El correo es obligatorio',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'El correo no es valido',
+                },
+              })}
+              error={!!errors.email}
+              helperText={errors.email?.message}
             />
           </Grid>
           <Grid item xs={12}>
@@ -54,9 +58,15 @@ export const LoginPage = () => {
               type="password"
               placeholder="contraseña"
               fullWidth
-              name="password"
-              value={password}
-              onChange={onInputChange}
+              {...register('password', {
+                required: 'La contraseña es obligatoria',
+                minLength: {
+                  value: 6,
+                  message: 'La contraseña debe tener al menos 6 caracteres',
+                },
+              })}
+              error={!!errors.password}
+              helperText={errors.password?.message}
             />
           </Grid>
 
