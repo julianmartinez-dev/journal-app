@@ -16,7 +16,7 @@ interface authState {
 
 // Define the initial state using that type
 const initialState: authState = {
-  status: 'not-authenticated',
+  status: 'checking',
   uid: null,
   email: null,
   displayName: null,
