@@ -1,13 +1,22 @@
 import { LogoutOutlined, MenuOutlined } from '@mui/icons-material';
 import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material';
+import { AnyAction } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+import { logout, startLogout } from '../../store/auth';
 
 interface Props {
     drawerWidth: number;
 }
 
 //DrawerWidth is the width of the sidebar
-
 export const NavBar = ({ drawerWidth }: Props) => {
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch( startLogout() as unknown as AnyAction );
+  }
+
   return (
     <AppBar
       position="fixed"
@@ -29,7 +38,7 @@ export const NavBar = ({ drawerWidth }: Props) => {
 
         <Grid container direction="row" justifyContent='space-between' alignItems={'center'}>
             <Typography variant='h6' noWrap component='div'> Journal APP </Typography>
-            <IconButton color="error">
+            <IconButton color="error" onClick={handleLogout}>
                 <LogoutOutlined />
             </IconButton>
         </Grid>

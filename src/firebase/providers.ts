@@ -2,7 +2,7 @@ import { FirebaseError } from 'firebase/app';
 import { GoogleAuthProvider, getAuth, signInWithPopup, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseAuth } from '.';
 interface IRegisterWithGoogle {
-  name: string;
+  displayName: string;
   email: string;
   password: string;
 }
@@ -38,18 +38,19 @@ export const signInWithGoogle = async () => {
 };
 
 
-export const registerWithEmailPassword = async ({email, name, password} : IRegisterWithGoogle) => {
+export const registerWithEmailPassword = async ({email, displayName , password} : IRegisterWithGoogle) => {
 
   try {
     const resp = await createUserWithEmailAndPassword(FirebaseAuth,email, password);
     const { uid, photoURL } = resp.user;
-    await updateProfile(FirebaseAuth.currentUser!, { displayName: name });
+
+    await updateProfile(FirebaseAuth.currentUser!, { displayName });
     
     return {
       ok: true,
       uid,
       photoURL,
-      name
+      displayName
     }
 
   } catch (error) {
@@ -75,7 +76,7 @@ export const loginWithEmailPassword = async (email: string, password: string) =>
       ok: true,
       uid,
       photoURL,
-      name: displayName
+      displayName
     }
   } catch (error) {
    if (error instanceof FirebaseError) {
@@ -89,4 +90,9 @@ export const loginWithEmailPassword = async (email: string, password: string) =>
      };
    }
   }
+}
+
+
+export const logoutFirebase = async () : Promise<void> => {
+  return await FirebaseAuth.signOut();
 }

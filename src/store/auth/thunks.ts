@@ -1,6 +1,6 @@
 import { Action, Dispatch } from "@reduxjs/toolkit"
 import { checkingCredentials, login, logout } from "./authSlice"
-import { loginWithEmailPassword, registerWithEmailPassword, signInWithGoogle } from '../../firebase';
+import { loginWithEmailPassword, logoutFirebase, registerWithEmailPassword, signInWithGoogle } from '../../firebase';
 
 export const checkingAuthentication = (email: string, password: string) => {
     return async (dispatch: Dispatch<Action>) => {
@@ -18,11 +18,11 @@ export const startGoogleSignIn = () => {
   };
 };
 
-export const startCreatingUserWithEmailPassword  = (email: string, name: string, password: string) => {
+export const startCreatingUserWithEmailPassword  = (email: string, displayName: string, password: string) => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch(checkingCredentials());
 
-    const resp = await registerWithEmailPassword({email, name, password})
+    const resp = await registerWithEmailPassword({email, displayName, password})
     if(!resp?.ok) return dispatch(logout({ errorMessage: resp?.errorMessage }));
     
     dispatch( login( resp ))
@@ -39,3 +39,12 @@ export const startSignInWithEmailPassword = (email: string, password: string) =>
     dispatch( login( resp ))
   }
 }
+
+export const startLogout = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    await logoutFirebase();
+
+    dispatch( logout({errorMessage: null}) )
+  }
+}
+

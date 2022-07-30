@@ -33,7 +33,10 @@ export const LoginPage = () => {
 
   return (
     <AuthLayout title="Iniciar sesión">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="animate__animated animate__fadeIn animate__faster"
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -72,7 +75,7 @@ export const LoginPage = () => {
 
           {errorMessage && (
             <Grid item xs={12}>
-             <Alert severity="error">{errorMessage}</Alert>
+              <Alert severity="error">{errorMessage}</Alert>
             </Grid>
           )}
           <Grid

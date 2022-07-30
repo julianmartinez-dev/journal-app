@@ -1,11 +1,16 @@
 import { LocalFireDepartment, TurnedInNot } from "@mui/icons-material";
 import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from '../../store/store';
 
 interface Props{
     drawerWidth: number;
 }
 
 export const Siderbar = ({ drawerWidth } :Props) => {
+
+  const {  displayName: name } = useSelector( (state: RootState) => state.auth);
+
   return (
     <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: 0 }}>
       <Drawer
@@ -20,9 +25,8 @@ export const Siderbar = ({ drawerWidth } :Props) => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            {' '}
-            Julian Martinez
+          <Typography variant="h6" noWrap component="div" textAlign={'center'}>
+            {name || ''}
           </Typography>
         </Toolbar>
         <Divider />
