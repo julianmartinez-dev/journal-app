@@ -3,7 +3,8 @@ import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { Dispatch } from "react"
 import { RootState } from '../store';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, savingNewNote, setActiveNote } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./journalSlice";
+import { loadNotes } from "../../helpers";
 
 interface newNote {
     title: string;
@@ -32,3 +33,12 @@ export const startNewNote = () => {
     
   };
 };
+
+export const startLoadingnotes = () => {
+  return async (dispatch: Dispatch<Action>, getState: ()=>RootState) => {
+    const { uid } = getState().auth;
+    if(!uid) throw new Error('uid is required');
+    const notes = await loadNotes(uid)
+    dispatch(setNotes(notes));
+  }
+}
