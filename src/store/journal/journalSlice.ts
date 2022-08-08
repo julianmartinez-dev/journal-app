@@ -10,7 +10,6 @@ interface INote {
   imageUrls: string[];
 }
 
-// Define a type for the slice state
 interface journalState {
   isSaving: boolean;
   messageSaved: string;
@@ -18,9 +17,8 @@ interface journalState {
   active: INote | null;
 }
 
-// Define the initial state using that type
 const initialState: journalState = {
-  isSaving: true,
+  isSaving: false,
   messageSaved: '',
   notes: [],
   active: null,
@@ -28,11 +26,18 @@ const initialState: journalState = {
 
 export const journalSlice = createSlice({
   name: 'journal',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    addNewEmptyNote: (state, action) => {},
-    setActiveNote: (state, action) => {},
+    savingNewNote(state) {
+        state.isSaving = true;
+    },
+    addNewEmptyNote: (state, action) => {
+        state.notes.push( action.payload );
+        state.isSaving = false;
+    },
+    setActiveNote: (state, action) => {
+        state.active = action.payload;
+    },
     setNotes: (state, action) => {},
     setSaving: (state) => {},
     updateNote: (state, action) => {},
@@ -47,6 +52,7 @@ export const {
   setSaving,
   updateNote,
   deleteNoteById,
+  savingNewNote,
 } = journalSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
