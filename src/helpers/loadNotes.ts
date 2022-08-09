@@ -23,6 +23,5 @@ export const loadNotes = async (uid: string):Promise<INotes[] | INotes> => {
             date,
         })
     })
-    console.log(notes);
     return notes;
 }

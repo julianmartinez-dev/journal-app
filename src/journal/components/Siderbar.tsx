@@ -1,7 +1,7 @@
-import { LocalFireDepartment, TurnedInNot } from "@mui/icons-material";
-import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { Box, Divider, Drawer, List, Toolbar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from '../../store/store';
+import { SideBarItem } from "./";
 
 interface Props{
     drawerWidth: number;
@@ -10,6 +10,7 @@ interface Props{
 export const Siderbar = ({ drawerWidth } :Props) => {
 
   const {  displayName: name } = useSelector( (state: RootState) => state.auth);
+  const { notes } = useSelector((state: RootState) => state.journal);
 
   return (
     <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: 0 }}>
@@ -31,20 +32,8 @@ export const Siderbar = ({ drawerWidth } :Props) => {
         </Toolbar>
         <Divider />
         <List>
-          {['Enero', 'Febrero', 'Marzo', ' Abril'].map((text, index) => (
-            <ListItem disablePadding key={text}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                  <ListItemText primary={text} />
-                  <ListItemText
-                    secondary={`Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab nisi aut harum dolorum.`}
-                  />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
+          {notes.map((note) => (
+            <SideBarItem key={note.id} note={note} />
           ))}
         </List>
       </Drawer>

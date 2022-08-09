@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../store';
 
-interface INote {
+export interface INote {
   id: string;
   title: string;
   body: string;

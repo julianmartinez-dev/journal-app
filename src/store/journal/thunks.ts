@@ -1,5 +1,5 @@
 import { Action } from "@reduxjs/toolkit"
-import { collection, doc, setDoc } from "firebase/firestore/lite";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore/lite";
 import { Dispatch } from "react"
 import { RootState } from '../store';
 import { FirebaseDB } from '../../firebase/config';
@@ -41,4 +41,25 @@ export const startLoadingnotes = () => {
     const notes = await loadNotes(uid)
     dispatch(setNotes(notes));
   }
+}
+
+export const startSaveNote = () => {
+  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const { uid } = getState().auth;
+    const { active } = getState().journal;
+
+    if(!uid) throw new Error('uid is required');
+    if(!active) throw new Error('active note is required');
+
+    const docRef = doc(  FirebaseDB, `${uid}/journal/notes/${active.id}` );
+    await setDoc( docRef, {
+      title: active.title,
+      body: active.body,
+      date: active.date,
+      imageUrls: []
+    }, { merge: true } );
+    
+    const notes = await loadNotes(uid);
+    dispatch(setNotes(notes));
+  };
 }
