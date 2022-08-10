@@ -3,7 +3,7 @@ import { collection, doc, setDoc, updateDoc } from "firebase/firestore/lite";
 import { Dispatch } from "react"
 import { RootState } from '../store';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers";
 
 interface newNote {
@@ -11,6 +11,7 @@ interface newNote {
     body: string;
     date: number;
     id?: string;
+    imageUrls: string[];
 }
 
 export const startNewNote = () => {
@@ -22,6 +23,7 @@ export const startNewNote = () => {
       title: 'my new doc',
       body: 'hello from thunks',
       date: new Date().getTime(),
+      imageUrls: [],
     };
 
     const newDoc = doc( collection( FirebaseDB, `${uid}/journal/notes` ));
@@ -45,6 +47,7 @@ export const startLoadingnotes = () => {
 
 export const startSaveNote = () => {
   return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    dispatch(setSaving())
     const { uid } = getState().auth;
     const { active } = getState().journal;
 
@@ -59,7 +62,6 @@ export const startSaveNote = () => {
       imageUrls: []
     }, { merge: true } );
     
-    const notes = await loadNotes(uid);
-    dispatch(setNotes(notes));
+    dispatch(updateNote({ ...active, imageUrls: [] }));
   };
 }

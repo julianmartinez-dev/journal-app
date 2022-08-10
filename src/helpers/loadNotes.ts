@@ -6,6 +6,7 @@ interface INotes {
     title: string,
     body: string,
     date: number,
+    imageUrls: string[],
 }
 
 export const loadNotes = async (uid: string):Promise<INotes[] | INotes> => {
@@ -15,13 +16,14 @@ export const loadNotes = async (uid: string):Promise<INotes[] | INotes> => {
     const docs = await getDocs(collectionRef);
     const notes:Array<INotes> = [];
     docs.forEach( doc => {
-        const { title, body, date } = doc.data();
+        const { title, body, date, imageUrls } = doc.data();
         notes.push({
-            id: doc.id,
-            title,
-            body,
-            date,
-        })
+          id: doc.id,
+          title,
+          body,
+          date,
+          imageUrls,
+        });
     })
     return notes;
 }

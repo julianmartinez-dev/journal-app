@@ -41,8 +41,19 @@ export const journalSlice = createSlice({
     setNotes: (state, action) => {
       state.notes = action.payload;
     },
-    setSaving: (state) => {},
-    updateNote: (state, action) => {},
+    setSaving: (state) => {
+      state.isSaving = true;
+      //todo: error message
+    },
+    updateNote: (state, action) => {
+      state.isSaving = false;
+      state.notes = state.notes.map(note => {
+        if (note.id === action.payload.id) {
+          return action.payload;
+        }
+        return note;
+      })
+    },
     deleteNoteById: (state, action) => {},
   },
 });
