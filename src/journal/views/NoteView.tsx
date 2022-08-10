@@ -8,6 +8,7 @@ import { useEffect, useMemo } from 'react';
 import { setActiveNote } from '../../store/journal';
 import { startSaveNote } from '../../store/journal/thunks';
 import { AnyAction } from '@reduxjs/toolkit';
+import Swal from 'sweetalert2';
 
 interface Inputs {
   title: string;
@@ -16,7 +17,7 @@ interface Inputs {
 
 export const NoteView = () => {
   const dispatch = useDispatch();
-  const { active } = useSelector((state: RootState) => state.journal);
+  const { active, messageSaved, isSaving } = useSelector((state: RootState) => state.journal);
 
   //React-Hook-Form
   const defaultValues = {
@@ -45,6 +46,17 @@ export const NoteView = () => {
   useEffect(() => {
     reset(defaultValues);
   }, [active]);
+
+  useEffect(() => {
+    if (messageSaved) {
+      Swal.fire({
+        title: 'Nota Actualizada',
+        text: messageSaved,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+    }
+  }, [messageSaved]);
 
   const dateString = useMemo(() => {
     const newDate = new Date(active!.date);
@@ -76,7 +88,12 @@ export const NoteView = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button color="primary" sx={{ padding: 2 }} type="submit">
+          <Button
+            color="primary"
+            sx={{ padding: 2 }}
+            type="submit"
+            disabled={isSaving}
+          >
             <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
             Guardar
           </Button>
