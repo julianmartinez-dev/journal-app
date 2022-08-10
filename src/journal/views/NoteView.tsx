@@ -1,10 +1,10 @@
-import { SaveOutlined } from '@mui/icons-material';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { RestaurantMenu, SaveOutlined, UploadOutlined } from '@mui/icons-material';
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { ImageGallery } from '../components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { setActiveNote } from '../../store/journal';
 import { startSaveNote } from '../../store/journal/thunks';
 import { AnyAction } from '@reduxjs/toolkit';
@@ -34,6 +34,8 @@ export const NoteView = () => {
 
   const watchTitle = watch('title');
   const watchBody = watch('body');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     dispatch( setActiveNote({
@@ -72,6 +74,12 @@ export const NoteView = () => {
   const onSubmit: SubmitHandler<Inputs> = () => {
     dispatch(startSaveNote() as unknown as AnyAction);
   };
+
+  const onInputFileChange = ( e : React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.files?.length === 0) return;
+
+    console.log('subiendo archivos')
+  }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid
@@ -88,6 +96,20 @@ export const NoteView = () => {
           </Typography>
         </Grid>
         <Grid item>
+
+          <input
+            type="file"
+            multiple
+            onChange={onInputFileChange}
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+          />
+
+          <IconButton color="primary" disabled={isSaving} onClick={() => fileInputRef.current?.click()}>
+            <UploadOutlined />
+          </IconButton>
+
+
           <Button
             color="primary"
             sx={{ padding: 2 }}

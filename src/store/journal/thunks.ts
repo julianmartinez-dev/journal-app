@@ -63,5 +63,6 @@ export const startSaveNote = () => {
     }, { merge: true } );
     
     dispatch(updateNote({ ...active, imageUrls: [] }));
+    
   };
 }
