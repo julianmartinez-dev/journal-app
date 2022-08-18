@@ -3,6 +3,7 @@ import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 import { AnyAction } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { logout, startLogout } from '../../store/auth';
+import { clearNotesLogout } from '../../store/journal';
 
 interface Props {
     drawerWidth: number;
@@ -14,6 +15,7 @@ export const NavBar = ({ drawerWidth }: Props) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    dispatch( clearNotesLogout() as unknown as AnyAction );
     dispatch( startLogout() as unknown as AnyAction );
   }
 
