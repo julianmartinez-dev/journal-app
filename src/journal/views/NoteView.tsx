@@ -6,7 +6,7 @@ import { ImageGallery } from '../components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useMemo, useRef } from 'react';
 import { setActiveNote } from '../../store/journal';
-import { startSaveNote } from '../../store/journal/thunks';
+import { startSaveNote, startUploadingFiles } from '../../store/journal/thunks';
 import { AnyAction } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
 
@@ -49,6 +49,7 @@ export const NoteView = () => {
     reset(defaultValues);
   }, [active]);
 
+  //TODO: check undefined
   useEffect(() => {
     if (messageSaved) {
       Swal.fire({
@@ -78,7 +79,7 @@ export const NoteView = () => {
   const onInputFileChange = ( e : React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files?.length === 0) return;
 
-    console.log('subiendo archivos')
+    dispatch(startUploadingFiles(e.target.files!) as unknown as AnyAction);
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -99,6 +100,7 @@ export const NoteView = () => {
 
           <input
             type="file"
+            accept='image/*'
             multiple
             onChange={onInputFileChange}
             style={{ display: 'none' }}
@@ -150,7 +152,7 @@ export const NoteView = () => {
             helperText={errors.body?.message}
           />
         </Grid>
-        <ImageGallery />
+        <ImageGallery images={active?.imageUrls}/>
       </Grid>
     </form>
   );
