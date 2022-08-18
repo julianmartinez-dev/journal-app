@@ -3,8 +3,8 @@ import { collection, doc, setDoc, updateDoc } from "firebase/firestore/lite";
 import { Dispatch } from "react"
 import { RootState } from '../store';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
-import { loadNotes } from "../../helpers";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
+import { fileUpload, loadNotes } from "../../helpers";
 
 interface newNote {
     title: string;
@@ -59,10 +59,23 @@ export const startSaveNote = () => {
       title: active.title,
       body: active.body,
       date: active.date,
-      imageUrls: []
+      imageUrls: active.imageUrls,
     }, { merge: true } );
     
-    dispatch(updateNote({ ...active, imageUrls: [] }));
+    dispatch(updateNote(active));
     
   };
+}
+
+export const startUploadingFiles = ( files : FileList) => {
+  return async (dispatch: Dispatch<Action>) =>{
+    dispatch(setSaving())
+    const fileUploadPromises = [];
+
+    for (const file of files) {
+      fileUploadPromises.push(fileUpload(file));
+    }
+    const photosUrl = await Promise.all(fileUploadPromises);
+    dispatch(setPhotosToActiveNote(photosUrl));
+  }
 }

@@ -47,6 +47,7 @@ export const journalSlice = createSlice({
       state.messageSaved = '';
     },
     updateNote: (state, action) => {
+      
       state.isSaving = false;
       state.notes = state.notes.map(note => {
         if (note.id === action.payload.id) {
@@ -56,18 +57,23 @@ export const journalSlice = createSlice({
       })
       state.messageSaved = `${action.payload.title}, actualizada correctamente`;
     },
+    setPhotosToActiveNote: (state, action) => {
+      state.active!.imageUrls = [...state.active!.imageUrls, ...action.payload];
+      state.isSaving = false;
+    },
     deleteNoteById: (state, action) => {},
   },
 });
 
 export const {
   addNewEmptyNote,
-  setActiveNote,
-  setNotes,
-  setSaving,
-  updateNote,
   deleteNoteById,
   savingNewNote,
+  setActiveNote,
+  setNotes,
+  setPhotosToActiveNote,
+  setSaving,
+  updateNote,
 } = journalSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
