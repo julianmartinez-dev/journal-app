@@ -1,9 +1,9 @@
 import { Action } from "@reduxjs/toolkit"
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore/lite";
+import { collection, deleteDoc, doc, setDoc } from "firebase/firestore/lite";
 import { Dispatch } from "react"
 import { RootState } from '../store';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
+import { addNewEmptyNote, deleteNoteByID, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
 import { fileUpload, loadNotes } from "../../helpers";
 
 interface newNote {
@@ -20,8 +20,8 @@ export const startNewNote = () => {
     
     const { uid } = getState().auth;
     const newNote: newNote = {
-      title: 'my new doc',
-      body: 'hello from thunks',
+      title: 'New Note',
+      body: 'Click here to edit',
       date: new Date().getTime(),
       imageUrls: [],
     };
@@ -78,4 +78,17 @@ export const startUploadingFiles = ( files : FileList) => {
     const photosUrl = await Promise.all(fileUploadPromises);
     dispatch(setPhotosToActiveNote(photosUrl));
   }
+}
+
+
+export const startDeletingNote = () => {
+  return async(dispatch: Dispatch<Action>, getState: ()=>RootState) => {
+    const { uid } = getState().auth;
+    const { active: note } = getState().journal;
+
+    const docRef = doc( FirebaseDB, `${uid}/journal/notes/${note!.id}` );
+    await deleteDoc(docRef);
+
+    dispatch(deleteNoteByID(note!.id));
+   }
 }

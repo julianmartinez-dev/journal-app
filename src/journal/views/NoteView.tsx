@@ -1,4 +1,4 @@
-import { RestaurantMenu, SaveOutlined, UploadOutlined } from '@mui/icons-material';
+import { DeleteOutline, RestaurantMenu, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -6,7 +6,7 @@ import { ImageGallery } from '../components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useMemo, useRef } from 'react';
 import { setActiveNote } from '../../store/journal';
-import { startSaveNote, startUploadingFiles } from '../../store/journal/thunks';
+import { startDeletingNote, startSaveNote, startUploadingFiles } from '../../store/journal/thunks';
 import { AnyAction } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
 
@@ -49,7 +49,6 @@ export const NoteView = () => {
     reset(defaultValues);
   }, [active]);
 
-  //TODO: check undefined
   useEffect(() => {
     if (messageSaved) {
       Swal.fire({
@@ -80,6 +79,10 @@ export const NoteView = () => {
     if(e.target.files?.length === 0) return;
 
     dispatch(startUploadingFiles(e.target.files!) as unknown as AnyAction);
+  }
+
+  const onDelete = () => {
+    dispatch(startDeletingNote() as unknown as AnyAction);
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -152,11 +155,17 @@ export const NoteView = () => {
             helperText={errors.body?.message}
           />
         </Grid>
+        <Grid container justifyContent={'end'}>
+            <Button>
+              <DeleteOutline
+                onClick={onDelete}
+                sx={{ mt: 2}}
+                color="error"
+              />
+            </Button>
+        </Grid>
         <ImageGallery images={active?.imageUrls}/>
       </Grid>
     </form>
   );
 };
-function watch(arg0: string): unknown {
-  throw new Error('Function not implemented.');
-}
