@@ -1,0 +1,29 @@
+// module.exports = {
+//   presets: [
+//     ['@babel/preset-env', { targets: { esmodules: true } }],
+//     ['@babel/preset-react', { runtime: 'automatic' }],
+//   ],
+// };
+{
+  "presets": [
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic", // defaults to classic
+        "importSource": "custom-jsx-library" // defaults to react (only in automatic runtime)
+      }
+    ],
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "esmodules": true
+        }
+      }
+    ],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-typescript"
+  ]
+}

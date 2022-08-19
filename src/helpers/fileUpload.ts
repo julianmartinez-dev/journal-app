@@ -1,5 +1,6 @@
-export const fileUpload = async (file : File): Promise<string> =>{
-    if(!file) throw new Error('file is required');
+export const fileUpload = async (file : File): Promise<string | null> =>{
+    // if(!file) throw new Error('file is required');
+    if(file.size === 0) return null;
 
     const cloudURL = 'https://api.cloudinary.com/v1_1/dbfueqhpu/upload';
 
