@@ -4,7 +4,7 @@ import type { RootState } from '../store'
 
 type IStatus = 'checking' | 'not-authenticated' | 'authenticated'
 
-interface authState {
+export interface authState {
   status: IStatus;
   uid?: string | null;
   email?: string | null;
@@ -43,7 +43,7 @@ export const authSlice = createSlice({
         state.email = null;
         state.displayName = null;
         state.photoURL = null;
-        state.errorMessage = payload.errorMessage;
+        state.errorMessage = payload.errorMessage || null;
      },
 
      checkingCredentials: (state) => {
