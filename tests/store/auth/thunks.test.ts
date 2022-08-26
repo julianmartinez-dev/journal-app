@@ -24,7 +24,7 @@ describe('Pruebas en authThunks', () =>{
             ok: true,
             ...testUser
         }
-        await signInWithGoogle.mockResolvedValue(loginData);
+        await (signInWithGoogle as jest.Mock).mockResolvedValue(loginData);
 
         //thunk
         await startGoogleSignIn()(dispatch);
@@ -40,7 +40,7 @@ describe('Pruebas en authThunks', () =>{
         errorMessage: 'Error en el login'
       };
 
-        await signInWithGoogle.mockResolvedValue(loginData)
+        await (signInWithGoogle as jest.Mock).mockResolvedValue(loginData)
 
         //thunk
         await startGoogleSignIn()(dispatch);
@@ -59,7 +59,7 @@ describe('Pruebas en authThunks', () =>{
             password: '123456'
         }
 
-        await loginWithEmailPassword.mockResolvedValue(loginData);
+        await (loginWithEmailPassword as jest.Mock).mockResolvedValue(loginData);
 
         await startSignInWithEmailPassword( formData.email, formData.password )(dispatch);
 
@@ -77,7 +77,7 @@ describe('Pruebas en authThunks', () =>{
             password: '123456'
         }
 
-        await loginWithEmailPassword.mockResolvedValue(loginData);
+        await (loginWithEmailPassword as jest.Mock).mockResolvedValue(loginData);
 
         await startSignInWithEmailPassword( formData.email, formData.password )(dispatch);
 
