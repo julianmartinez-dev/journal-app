@@ -2,7 +2,7 @@ import { Action, Dispatch } from "@reduxjs/toolkit"
 import { checkingCredentials, login, logout } from "./authSlice"
 import { loginWithEmailPassword, logoutFirebase, registerWithEmailPassword, signInWithGoogle } from '../../firebase';
 
-export const checkingAuthentication = (email: string, password: string) => {
+export const checkingAuthentication = () => {
     return async (dispatch: Dispatch<Action>) => {
         dispatch(checkingCredentials())
     }
