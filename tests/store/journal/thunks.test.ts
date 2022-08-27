@@ -4,7 +4,6 @@ import { addNewEmptyNote, savingNewNote, setActiveNote } from "../../../src/stor
 import { startNewNote } from "../../../src/store/journal/thunks";
 
 describe('Pruebas en journal Thunks', () =>{
-
     const dispatch = jest.fn();
     const getState = jest.fn();
     jest.setTimeout(10000);
